@@ -1,0 +1,67 @@
+var produtos = [];
+
+function criarProduto(nome, preço, estoque) {
+  var produto = {
+    nome,
+    preço,
+    estoque,
+  };
+  produtos.push(produto);
+}
+
+function valorDoPedido(pedido) {
+  var total = 0;
+  for (var i = 0; i < pedido.length; i++) {
+    var nomeProduto = pedido[i].nome;
+    var quantidade = pedido[i].quantidade;
+
+    var produto = produtos.find(function (p) {
+      return p.nome === nomeProduto;
+    });
+
+    if (produto) {
+      if (produto.estoque >= quantidade) {
+        total += produto.preço * quantidade;
+        produto.estoque -= quantidade;
+      } else {
+        console.log("Estamos sem " + nomeProduto);
+      }
+    } else {
+      console.log("Não possuímos " + nomeProduto);
+    }
+  }
+  return total;
+}
+
+function exibirCatalogo() {
+  console.log("Catálogo de Produtos:");
+  produtos.forEach(function (produto) {
+    console.log(
+      produto.nome + " - Preço: R$" + produto.preço + " - Estoque: " + produto.estoque
+    );
+  });
+}
+
+function fazerPedido() {
+  var pedido = [];
+  while (true) {
+    var nomeProduto = prompt("Diga qual produto deseja (Cancelar compra, digite fim):");
+    if (nomeProduto === 'fim') {
+      break;
+    }
+    var quantidade = parseInt(prompt("Diga a quantidade: "));
+    pedido.push({ nome: nomeProduto, quantidade: quantidade });
+  }
+  return pedido;
+}
+
+criarProduto("Café", 1, 20);
+criarProduto("Bisnaga", 3, 10);
+criarProduto("Rapadura", 9, 30);
+
+exibirCatalogo();
+
+var pedido = fazerPedido();
+var totalPedido = calcularTotalPedido(pedido);
+console.log("Total do Pedido: R$" + totalPedido);
+exibirCatalogo();
